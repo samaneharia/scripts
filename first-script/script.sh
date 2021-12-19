@@ -1,4 +1,3 @@
 #!/bin/bash
-username=$(echo $USER)
-egrep -i 'error|warning' /var/log/dmesg > /home/$username/dmesg.txt
+egrep -i 'error|warning' /var/log/dmesg > /home/$(echo $USER)/dmesg.txt
 
