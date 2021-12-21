@@ -1,6 +1,6 @@
-#This is a short script to find *Boot Errors and Warnings* automatically
-#while the system is booting and then  forwarding them to a file which is
-#in the *Home Directoy*.
+This is a short script to find *Boot Errors and Warnings* automatically
+while the system is booting and then  forwarding them to a file which is
+in the *Home Directoy*.
 
 > dmesg | grep -iE 'error|warning' > $HOME/dmesg.txt
 
@@ -15,7 +15,7 @@ to another which is *grep* command in here. The grep command with -iE switch
 named dmesg.txt which is in homedirectoy ($HOME variable returns
 the homedirectoy address).
 
-##How to automate the script ?
+How to automate the script ?
  
     Use the crontab -e command to open your user account's crontab 
     file.Commands in this file run with your user account's permissions.
