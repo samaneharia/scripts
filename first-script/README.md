@@ -5,8 +5,11 @@ in the *Home Directoy*.
 First copy the filescript in this path :
 > cp [filescrpit address] /usr/local/bin
 
-Then you must edit crontab file to automate the script:
-> sudo crontab -e 
+Then you must edit crontab file to automate the script :
+> crontab -e
+
+If you use *sudo crontab -e* the scirpt will run with root user and will
+use the root home dirctory as a address to creat the final file.
 
 And then go at the end of this file and add this command:
 > @reboot /usr/local/bin/[script's name]
