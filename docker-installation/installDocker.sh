@@ -26,10 +26,6 @@ if [ $status -eq 1 ];then
 
   #creating a symbolic link if docker-compose command fails.
   ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-  
-  #checking versions
-  docker --version
-  docker-compose --version
 
 else
 
@@ -52,9 +48,13 @@ else
  
   #creating a symbolic link if docker-compose command fails.
   ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
- 
-  #checking versions
-  docker --version
-  docker-compose --version
-
+  
 fi
+  
+  #To run Rootless Docker inside “rootful” Docker
+  docker run -d --name dind-rootless --privileged docker:20.10-dind-rootless
+
+  #start and enable
+  systemctl start docker
+  systemctl enable docker
+
