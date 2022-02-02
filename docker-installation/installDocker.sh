@@ -1,60 +1,26 @@
 #!/bin/bash
 
-set -ex
+sudo apt-get update
+sudo apt-get install ca-certificates curl gnupg lsb-release
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+sudo echo \
+"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+$(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-if [ $(id -u) != 0 ]; then
-  echo -e "It must be root user."
-  exit 1
-fi 
+sudo apt-get remove docker docker-engine docker.io containerd runc
+sudo rm -rf /var/lib/docker
+sudo rm -rf /var/lib/containerd
 
-check=$(systemctl --type=service | grep docker.service)
-status=$? 
+sudo apt-get update  
+sudo apt-get install docker-ce docker-ce-cli containerd.io                        
+                                                  
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
 
-if [ $status -eq 1 ];then
-  
-  #This service doesnt exist.installing the last version.
-  apt-get update
-  apt-get install docker-ce docker-ce-cli containerd.io
-  apt-cache madison docker-ce
-  apt-get install docker-ce=<VERSION_STRING> \ 
-	  docker-ce-cli=<VERSION_STRING> containerd.io
+sudo systemctl start docker
+sudo systemctl enable docker
 
-  #installing docker-compose
-  curl -L "https://github.com/docker/compose/releases/download/1.29.2/ \ 
-	  docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  chmod +x /usr/local/bin/docker-compose
+sudo docker-compose version
+sudo docker version
 
-  #creating a symbolic link if docker-compose command fails.
-  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-
-else
-
-  #This servis exist.Removing the existed version.
-  apt-get remove docker docker-engine docker.io containerd runc
-  rm -rf /var/lib/docker
-  rm -rf /var/lib/containerd
-
-  #installing last version.
-  apt-get update                                                               
-  apt-get install docker-ce docker-ce-cli containerd.io                        
-  apt-cache madison docker-ce                                                  
-  apt-get install docker-ce=<VERSION_STRING> \                                 
-        docker-ce-cli=<VERSION_STRING> containerd.io                             
-  
-  #installing docker-compose
-  curl -L "https://github.com/docker/compose/releases/download/1.29.2/ \
-	  docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  chmod +x /usr/local/bin/docker-compose
- 
-  #creating a symbolic link if docker-compose command fails.
-  ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-  
-fi
-  
-  #To run Rootless Docker inside “rootful” Docker
-  docker run -d --name dind-rootless --privileged docker:20.10-dind-rootless
-
-  #start and enable
-  systemctl start docker
-  systemctl enable docker
-
+sudo usermod -aG docker $USER
