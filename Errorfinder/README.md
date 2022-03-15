@@ -17,7 +17,3 @@ and will use the root home dirctory as a address to creat the final file.*
 At the end press ***:wq*** to save and exit.
 
 Now your scrpit will be run everytime that your system is starting up.
-
-
-
-
